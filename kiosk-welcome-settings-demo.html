@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>電小二・歡迎頁設定模擬</title>
+<style>
+:root{
+  --bg:#FAF9F7;
+  --card:#FFFFFF;
+  --surface:#F4F2EF;
+  --b-tertiary:#ECEAE6;
+  --b-secondary:#D9D5CF;
+  --t-primary:#1F2329;
+  --t-secondary:#5C616B;
+  --t-tertiary:#9AA0A8;
+  --info-bg:#E6F2F0;
+  --info-text:#2E6E66;
+  --info-border:#5BAEA3;
+  --r-md:10px;
+  --r-lg:16px;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--t-primary);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei","Noto Sans TC","Segoe UI",Roboto,sans-serif;
+  line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:760px;margin:0 auto;padding:32px 20px 40px}
+.head h1{font-size:20px;font-weight:600;margin:0}
+.head p{font-size:13px;color:var(--t-secondary);margin:6px 0 0}
+.stage{display:flex;flex-wrap:wrap;gap:18px;align-items:flex-start;margin-top:24px}
+.panel{flex:1;min-width:264px;background:var(--card);border:1px solid var(--b-tertiary);border-radius:var(--r-lg);padding:8px 18px 18px}
+.item{padding:13px 0}
+.item + .item{border-top:1px solid var(--b-tertiary)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.rlb{font-size:14px;color:var(--t-primary)}
+.fld{font-size:13px;color:var(--t-secondary);margin:0 0 9px}
+.opt{font:inherit;font-size:14px;padding:11px 12px;border-radius:var(--r-md);border:1px solid var(--b-secondary);background:transparent;color:var(--t-primary);cursor:pointer;line-height:1.2}
+.opt.on{background:var(--info-bg);color:var(--info-text);border-color:var(--info-border);font-weight:500}
+.opt:disabled{opacity:.35;cursor:not-allowed}
+.mopt{box-sizing:border-box;display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;font:inherit;font-size:14px;text-align:left;padding:12px 13px;border-radius:var(--r-md);border:1px solid var(--b-secondary);background:transparent;color:var(--t-primary);cursor:pointer;line-height:1.2}
+.mopt .ind{color:var(--t-tertiary);display:inline-flex;flex:none}
+.mopt.on{background:var(--info-bg);border:2px solid var(--info-border);color:var(--info-text);font-weight:500;padding:11px 12px}
+.mopt.on .ind{color:var(--info-text)}
+select,input[type=number]{font:inherit;font-size:14px;color:var(--t-primary);background:var(--card);border:1px solid var(--b-secondary);border-radius:var(--r-md);padding:8px 10px}
+.sw{position:relative;display:inline-block;width:42px;height:24px;flex:none}
+.sw input{opacity:0;width:0;height:0;position:absolute}
+.sw .tk{position:absolute;inset:0;background:var(--b-secondary);border-radius:999px;cursor:pointer;transition:.15s}
+.sw .tk:before{content:"";position:absolute;width:18px;height:18px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.15s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+.sw input:checked + .tk{background:var(--info-border)}
+.sw input:checked + .tk:before{transform:translateX(18px)}
+.deviceWrap{background:var(--surface);border-radius:var(--r-lg);padding:16px;display:flex;justify-content:center}
+.foot{font-size:12px;color:var(--t-tertiary);margin-top:20px}
+.code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:11px;color:var(--t-tertiary)}
+.cblk + .cblk{margin-top:14px}
+.crow{display:flex;align-items:center;gap:10px}
+.cin{width:44px;height:28px;padding:2px;border:1px solid var(--b-secondary);border-radius:8px;background:var(--card);cursor:pointer;flex:none}
+.cop{flex:1;min-width:0}
+.opv{font-size:12px;color:var(--t-secondary);flex:none;white-space:nowrap}
+button:focus-visible,input:focus-visible,select:focus-visible,label.sw:focus-within{outline:2px solid var(--info-border);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="head">
+    <h1>電小二・自助點餐機 — 歡迎頁設定模擬</h1>
+    <p>切換左側設定，右側點餐機畫面即時預覽。選項已全部展開，選中項以填色標示。</p>
+  </div>
+
+  <div class="stage">
+    <div class="panel">
+      <div class="item">
+        <div class="row"><span class="rlb" style="font-weight:500">顯示歡迎頁</span>
+          <label class="sw"><input type="checkbox" id="showw" checked aria-label="顯示歡迎頁"><span class="tk"></span></label>
+        </div>
+      </div>
+      <div id="dep">
+        <div class="item">
+          <div class="fld">歡迎頁模式</div>
+          <div id="mg" style="display:flex;flex-direction:column;gap:8px">
+            <button class="mopt on" data-mode="tap"><span>點擊螢幕開始</span><span class="ind"></span></button>
+            <button class="mopt" data-mode="split"><span>點餐／付款分流</span><span class="ind"></span></button>
+            <button class="mopt" data-mode="lang"><span>語系選擇</span><span class="ind"></span></button>
+          </div>
+        </div>
+        <div class="item" id="textItem">
+          <div class="fld">歡迎文字設定</div>
+          <div id="tg" style="display:grid;grid-template-columns:repeat(2,1fr);gap:8px">
+            <button class="opt on" data-text="light" style="text-align:center">白底黑字</button>
+            <button class="opt" data-text="dark" style="text-align:center">黑底白字</button>
+            <button class="opt" data-text="none" style="text-align:center">不顯示</button>
+            <button class="opt" data-text="custom" style="text-align:center">自訂</button>
+          </div>
+          <div id="customRow" style="display:none;margin-top:14px">
+            <div class="cblk">
+              <div class="fld" style="margin-bottom:7px">歡迎文字 <span class="code">maColorTextWelcome</span></div>
+              <div class="crow"><input type="color" id="ctxt" value="#FFFFFF" class="cin"><input type="range" id="atxt" min="0" max="1" step="0.05" value="1" class="cop"><span class="opv" id="atxtv">透明度 1</span></div>
+            </div>
+            <div class="cblk">
+              <div class="fld" style="margin-bottom:7px">歡迎頁背景顏色 <span class="code">maColorBackgroundWelcome</span></div>
+              <div class="crow"><input type="color" id="cbg" value="#000000" class="cin"><input type="range" id="abg" min="0" max="1" step="0.05" value="0.8" class="cop"><span class="opv" id="abgv">透明度 0.8</span></div>
+            </div>
+            <div class="cblk">
+              <div class="fld" style="margin-bottom:7px">輔助顏色 <span class="code">maColorTertiary</span></div>
+              <div class="crow"><input type="color" id="cacc" value="#F5C518" class="cin"><input type="range" id="aacc" min="0" max="1" step="0.05" value="1" class="cop"><span class="opv" id="aaccv">透明度 1</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="fld">文字顯示位置</div>
+          <div id="pg" style="display:flex;gap:8px">
+            <button class="opt" data-pos="top" style="flex:1;text-align:center">上</button>
+            <button class="opt on" data-pos="mid" style="flex:1;text-align:center">中</button>
+            <button class="opt" data-pos="bot" style="flex:1;text-align:center">下</button>
+          </div>
+        </div>
+        <div class="item">
+          <div class="fld">輪播間隔</div>
+          <div style="display:flex;align-items:center;gap:8px"><input type="number" id="iv" min="1" step="1" value="5" style="width:88px" /><span style="font-size:13px;color:var(--t-secondary)">秒</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="deviceWrap">
+      <div style="position:relative;width:286px;height:534px;background:#16181F;border-radius:30px;padding:10px">
+        <div style="position:relative;width:100%;height:100%;background:#EDE7DD;border-radius:22px;overflow:hidden">
+          <div style="position:absolute;top:26px;left:0;right:0;text-align:center">
+            <div style="display:inline-flex;align-items:center;gap:7px">
+              <span style="display:inline-flex;width:30px;height:30px;border-radius:7px;background:#5BAEA3;color:#fff;align-items:center;justify-content:center;font-weight:500;font-size:15px">電</span>
+              <span style="font-size:22px;font-weight:500;color:#3A4048">小二</span>
+            </div>
+            <div style="font-size:10px;color:#9AA0A8;letter-spacing:.5px;margin-top:3px">Smart Food &amp; Beverage Solution</div>
+            <div style="font-size:11px;color:#7E8088;margin-top:1px">電小二智慧點餐系統</div>
+          </div>
+          <div style="position:absolute;top:175px;left:50%;transform:translateX(-50%);width:128px">
+            <div style="height:26px;background:#E2B377;border-radius:60px 60px 10px 10px"></div>
+            <div style="height:9px;background:#8FB45A;border-radius:2px;margin-top:-3px"></div>
+            <div style="height:30px;background:#9A5E33;border-radius:6px;margin-top:-2px"></div>
+            <div style="height:18px;background:#E2B377;border-radius:10px 10px 30px 30px;margin-top:-2px"></div>
+          </div>
+          <div id="az" style="position:absolute;left:5%;right:5%;bottom:25%;text-align:center"></div>
+          <div id="offn" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;padding:24px">
+            <div style="background:rgba(255,255,255,.92);border-radius:14px;padding:16px 18px;color:#5B5F68;font-size:14px">歡迎頁未啟用</div>
+          </div>
+          <div style="position:absolute;bottom:10px;right:12px;font-size:8px;color:#B4AFA4;text-align:right;line-height:1.3">Powered by<br><span style="display:inline-block;width:16px;height:16px;background:#B23A2E;border-radius:3px;margin-top:2px"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="foot">※ 互動行為示意；配色與餐點主視覺為佔位，非正式視覺。</p>
+</div>
+
+<script>
+(function(){
+  var state={show:true,mode:'tap',text:'light',pos:'mid',ctxt:'#FFFFFF',atxt:1,cbg:'#000000',abg:0.8,cacc:'#F5C518',aacc:1};
+  var az=document.getElementById('az'),offn=document.getElementById('offn'),dep=document.getElementById('dep');
+  var showw=document.getElementById('showw'),mg=document.getElementById('mg'),tg=document.getElementById('tg'),pg=document.getElementById('pg'),textItem=document.getElementById('textItem');
+  var customRow=document.getElementById('customRow');
+  var ctxt=document.getElementById('ctxt'),atxt=document.getElementById('atxt'),atxtv=document.getElementById('atxtv');
+  var cbg=document.getElementById('cbg'),abg=document.getElementById('abg'),abgv=document.getElementById('abgv');
+  var cacc=document.getElementById('cacc'),aacc=document.getElementById('aacc'),aaccv=document.getElementById('aaccv');
+  function rgba(hex,a){hex=hex.replace('#','');if(hex.length===3){hex=hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];}return 'rgba('+parseInt(hex.substr(0,2),16)+','+parseInt(hex.substr(2,2),16)+','+parseInt(hex.substr(4,2),16)+','+a+')';}
+
+  function svg(n,s){
+    s=s||20;
+    var p={
+      circle:'<circle cx="12" cy="12" r="9"/>',
+      'circle-check':'<circle cx="12" cy="12" r="9"/><path d="M9 12l2 2l4 -4"/>',
+      'chevron-down':'<path d="M6 9l6 6l6 -6"/>',
+      'chevron-right':'<path d="M9 6l6 6l-6 6"/>',
+      world:'<circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8"/><path d="M11.5 3a17 17 0 0 0 0 18M12.5 3a17 17 0 0 1 0 18"/>',
+      bell:'<path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6"/><path d="M9 17v1a3 3 0 0 0 6 0v-1"/>',
+      dollar:'<path d="M16.7 8a3 3 0 0 0 -2.7 -2h-4a3 3 0 0 0 0 6h4a3 3 0 0 1 0 6h-4a3 3 0 0 1 -2.7 -2"/><path d="M12 3v3"/><path d="M12 18v3"/>',
+      'hand-finger':'<path d="M8 13v-8.5a1.5 1.5 0 0 1 3 0v7.5"/><path d="M11 11.5v-2a1.5 1.5 0 0 1 3 0v2.5"/><path d="M14 10.5a1.5 1.5 0 0 1 3 0v1.5"/><path d="M17 11.5a1.5 1.5 0 0 1 3 0v4.5a6 6 0 0 1 -6 6h-2a6 6 0 0 1 -5 -2.7l-.5 -.8c-.2 -.3 -1.3 -2.2 -3.2 -5.7a1.5 1.5 0 0 1 .5 -2a1.8 1.8 0 0 1 2.2 .3l1.5 1.5"/>'
+    }[n]||'';
+    return '<svg xmlns="http://www.w3.org/2000/svg" width="'+s+'" height="'+s+'" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+p+'</svg>';
+  }
+
+  function pill(l){return '<button style="background:#fff;color:#2B2F3A;border:1px solid #E2DCD0;border-radius:22px;padding:13px 6px;font:inherit;font-size:14px;cursor:pointer">'+l+'</button>';}
+  function primary(l){return '<button style="background:#5BAEA3;color:#fff;border:none;border-radius:22px;padding:13px 6px;font:inherit;font-size:14px;font-weight:500;cursor:pointer">'+l+'</button>';}
+  function more(){return '<button style="background:#fff;color:#2B2F3A;border:1px solid #E2DCD0;border-radius:22px;padding:13px 4px;font:inherit;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:5px">'+svg('world',15)+'More'+svg('chevron-right',14)+'</button>';}
+  function splitBtn(zh,en,ic){return '<button style="flex:1;background:#5BAEA3;color:#fff;border:none;border-radius:14px;padding:16px 12px;font:inherit;cursor:pointer;text-align:left;display:flex;align-items:center;justify-content:space-between"><span><span style="font-size:19px;font-weight:500;display:block">'+zh+'</span><span style="font-size:13px;opacity:.9">'+en+'</span></span>'+svg(ic,22)+'</button>';}
+
+  function azHTML(){
+    if(state.mode==='tap'){
+      if(state.text==='none') return '';
+      var st, iconStyle='';
+      if(state.text==='custom'){
+        st='background:'+rgba(state.cbg,state.abg)+';color:'+rgba(state.ctxt,state.atxt)+';';
+        iconStyle='color:'+rgba(state.cacc,state.aacc)+';';
+      } else if(state.text==='dark'){ st='background:#23262E;color:#fff;'; }
+      else { st='background:#fff;color:#23262E;'; }
+      return '<div style="display:inline-flex;align-items:center;gap:14px;padding:14px 24px;border-radius:14px;font-size:18px;font-weight:500;'+st+'"><span>點擊螢幕開始點餐</span><span style="display:inline-flex;'+iconStyle+'">'+svg('hand-finger',24)+'</span></div>';
+    }
+    if(state.mode==='split'){
+      return '<div style="display:flex;gap:10px">'+splitBtn('我要點餐','Order','bell')+splitBtn('我要付款','Checkout','dollar')+'</div>';
+    }
+    var dark=state.text==='dark';
+    var panel=dark?'#23262E':'#F6F2EB',hint=dark?'#D7DAE0':'#6B6F78';
+    var grid='<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">'+primary('開始點餐')+pill('English')+pill('日本語')+pill('한국어')+pill('Français')+more()+'</div>';
+    return '<div style="background:'+panel+';border-radius:16px;padding:14px 12px"><div style="font-size:14px;font-weight:500;color:'+hint+';margin:0 0 12px;display:flex;align-items:center;justify-content:center;gap:8px">'+svg('chevron-down',14)+'點擊按鈕開始'+svg('chevron-down',14)+'</div>'+grid+'</div>';
+  }
+
+  function posPct(){ return state.pos==='top'?43:(state.pos==='bot'?7:25); }
+  function setActive(g,a,v){Array.prototype.forEach.call(g.querySelectorAll('.opt'),function(b){b.classList.toggle('on',b.getAttribute(a)===v);});}
+  function setMode(){Array.prototype.forEach.call(mg.querySelectorAll('.mopt'),function(b){var on=b.getAttribute('data-mode')===state.mode;b.classList.toggle('on',on);b.querySelector('.ind').innerHTML=svg(on?'circle-check':'circle',18);});}
+
+  function refreshTextAvail(){
+    var noneBtn=tg.querySelector('[data-text="none"]');
+    var customBtn=tg.querySelector('[data-text="custom"]');
+    noneBtn.disabled=false; customBtn.disabled=false;
+    if(state.mode==='lang'){
+      noneBtn.disabled=true; customBtn.disabled=true;
+      if(state.text==='none'||state.text==='custom'){state.text='light';}
+    }
+    setActive(tg,'data-text',state.text);
+    customRow.style.display=(state.text==='custom')?'block':'none';
+  }
+
+  function render(){
+    if(!state.show){
+      dep.style.opacity='.4'; dep.style.pointerEvents='none';
+      az.style.display='none'; offn.style.display='flex';
+      return;
+    }
+    dep.style.opacity=''; dep.style.pointerEvents='';
+    offn.style.display='none'; az.style.display='';
+    az.innerHTML=azHTML();
+    az.style.bottom=posPct()+'%';
+    setMode();
+    setActive(pg,'data-pos',state.pos);
+    if(state.mode==='split'){ textItem.style.display='none'; }
+    else { textItem.style.display=''; refreshTextAvail(); }
+  }
+
+  showw.addEventListener('change',function(){state.show=showw.checked;render();});
+  mg.addEventListener('click',function(e){var b=e.target.closest('.mopt');if(!b)return;state.mode=b.getAttribute('data-mode');render();});
+  tg.addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b||b.disabled)return;state.text=b.getAttribute('data-text');render();});
+  pg.addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b)return;state.pos=b.getAttribute('data-pos');render();});
+  ctxt.addEventListener('input',function(){state.ctxt=ctxt.value;render();});
+  atxt.addEventListener('input',function(){state.atxt=parseFloat(atxt.value);atxtv.textContent='透明度 '+state.atxt;render();});
+  cbg.addEventListener('input',function(){state.cbg=cbg.value;render();});
+  abg.addEventListener('input',function(){state.abg=parseFloat(abg.value);abgv.textContent='透明度 '+state.abg;render();});
+  cacc.addEventListener('input',function(){state.cacc=cacc.value;render();});
+  aacc.addEventListener('input',function(){state.aacc=parseFloat(aacc.value);aaccv.textContent='透明度 '+state.aacc;render();});
+
+  render();
+})();
+</script>
+</body>
+</html>
